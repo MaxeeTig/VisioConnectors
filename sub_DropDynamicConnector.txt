@@ -1,15 +1,21 @@
 
-Sub DropDynamicConnector(connectorType As String, arrowType As String, fontSize As String)
+Sub DropDynamicConnector(connectorType As String, arrowType As String, fontSize As String, lineColor As String, lineWidth As String)
 ' Connector Shape handle
 StartX = 5 + Rnd() * 2
 StartY = 2 + Rnd() * 2
 
 Dim vsoShape As Visio.Shape
 Set vsoShape = ActivePage.Drop(Visio.Application.ConnectorToolDataObject, StartX, StartY)
-    vsoShape.CellsSRC(visSectionObject, visRowShapeLayout, visSLOLineRouteExt).FormulaU = connectorType
+    If connectorType = "4" Then
+        vsoShape.CellsSRC(visSectionObject, visRowShapeLayout, visSLOLineRouteExt).FormulaU = "4" ' Dashed line for Reply type
+    Else
+        vsoShape.CellsSRC(visSectionObject, visRowShapeLayout, visSLOLineRouteExt).FormulaU = "0" ' Solid line for others
+    End If
     vsoShape.CellsSRC(visSectionObject, visRowShapeLayout, visSLORouteStyle).FormulaU = "16"
     vsoShape.CellsSRC(visSectionObject, visRowLine, visLineWeight).FormulaU = "1.5 pt"
     vsoShape.CellsSRC(visSectionObject, visRowLine, visLineEndArrow).FormulaU = arrowType
+    vsoShape.CellsSRC(visSectionObject, visRowLine, visLineColor).FormulaU = lineColor
+    vsoShape.CellsSRC(visSectionObject, visRowLine, visLineWeight).FormulaU = lineWidth & " pt"
     vsoShape.Characters.Begin = 0
     vsoShape.Characters.End = 0
     vsoShape.Characters.Text = vsoShape.Name
