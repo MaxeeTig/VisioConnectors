@@ -6,13 +6,14 @@ StartY = 2 + Rnd() * 2
 
 Dim vsoShape As Visio.Shape
 Set vsoShape = ActivePage.Drop(Visio.Application.ConnectorToolDataObject, StartX, StartY)
-    vsoShape.CellsSRC(visSectionObject, visRowShapeLayout, visSLOLineRouteExt).FormulaU = "1"
+    vsoShape.CellsSRC(visSectionObject, visRowShapeLayout, visSLOLineRouteExt).FormulaU = connectorType
     vsoShape.CellsSRC(visSectionObject, visRowShapeLayout, visSLORouteStyle).FormulaU = "16"
     vsoShape.CellsSRC(visSectionObject, visRowLine, visLineWeight).FormulaU = "1.5 pt"
-    vsoShape.CellsSRC(visSectionObject, visRowLine, visLineEndArrow).FormulaU = "13"
+    vsoShape.CellsSRC(visSectionObject, visRowLine, visLineEndArrow).FormulaU = arrowType
     vsoShape.Characters.Begin = 0
     vsoShape.Characters.End = 0
     vsoShape.Characters.Text = vsoShape.Name
+    vsoShape.CellsSRC(visSectionObject, visRowText, visTxtFontSize).FormulaU = fontSize & " pt"
     
     BeginX = vsoShape.Cells("BeginX").Result("mm")
     BeginY = vsoShape.Cells("BeginY").Result("mm")
