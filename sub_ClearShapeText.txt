@@ -1,0 +1,13 @@
+Sub ClearShapeText()
+
+' Replace text on all Dynamic Connector shapes after some experiments and set as shape.Name
+Dim pg As Visio.Page
+Dim sh As Visio.Shape
+Set pg = ActivePage
+    
+        For Each sh In pg.Shapes
+            sname = Left(sh.NameU, 7)
+            If sname = "Dynamic" Then sh.Text = sh.Name
+        Next sh
+      
+End Sub

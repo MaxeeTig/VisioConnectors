@@ -1,0 +1,95 @@
+Sub ConnectorsNumbering()
+
+    Dim pg As Visio.Page
+    Dim sh As Visio.Shape
+    
+    ' define start naming temlate
+    Dim namingTemplate As String
+    namingTemplate = "1."
+    
+    ' define dynamyc array
+    Dim shArray() As Integer
+    
+   'Set the page
+    Set pg = ActivePage
+    
+    
+    ' init counter
+    I = 0
+    ' count only DC shapes
+     For Each sh In pg.Shapes
+        sname = Left(sh.NameU, 7)
+        If sname = "Dynamic" Then I = I + 1
+     Next sh
+
+    ' store number of Dynamic connectors only defined in prev loop
+    countShapes = I
+        
+    ' resize array to number of countShapes - 1 rows (count from 0) and 2 columns
+    ' column 0 = BeginY, column 1 - shape Id
+    ReDim shArray(countShapes - 1, 1)
+
+    ' init counter
+    I = 0
+    'fill array
+    For Each sh In pg.Shapes
+        sname = Left(sh.NameU, 7)
+        If sname = "Dynamic" Then
+            shName = sh.NameU
+            shBeginY = Round(sh.Cells("BeginY").Result("mm"), 0)
+            shId = sh.ID
+            shArray(I, 0) = shBeginY
+            shArray(I, 1) = shId
+            ' next row
+            I = I + 1
+        End If
+    Next sh
+
+' test output
+    For I = 0 To I - 1
+    t = "Array[i]: " & I & " BeginY: " & shArray(I, 0) & " ID: " & shArray(I, 1)
+              Debug.Print (t)
+    Next I
+
+' Bubble sorting
+For i1 = 0 To (countShapes - 1)
+    im = i1
+    For i2 = i1 To (countShapes - 1)
+        If shArray(i2, 0) > shArray(im, 0) Then im = i2
+    Next
+    If im <> i1 Then
+        tmp1 = shArray(i1, 0)
+        tmp2 = shArray(i1, 1)
+        shArray(i1, 0) = shArray(im, 0)
+        shArray(i1, 1) = shArray(im, 1)
+        shArray(im, 0) = tmp1
+        shArray(im, 1) = tmp2
+        
+    End If
+    Next
+    
+    
+  ' test output
+    For I = 0 To countShapes - 1
+    t = "BeginY: " & shArray(I, 0) & " ID: " & shArray(I, 1) & " -> NameU: " & n
+              Debug.Print (t)
+    Next I
+  
+
+' set text - loop by array
+   For I = 0 To I - 1
+   oldText = Application.ActiveWindow.Page.Shapes.ItemFromID(shArray(I, 1)).Characters.Text
+   ' Debug.Print (oldText)
+   
+   ' if oldText starts with "1." cut it
+    If InStr(1, oldText, namingTemplate) <> 0 Then
+        If (I + 1) > 9 Then oldText = Right(oldText, Len(oldText) - 6)
+        Else: oldText = Right(oldText, Len(oldText) - 5)
+    End If
+      
+   newText = namingTemplate & (I + 1) & ". " & oldText
+   Application.ActiveWindow.Page.Shapes.ItemFromID(shArray(I, 1)).Characters.Text = newText
+   Next I
+   
+
+End Sub
