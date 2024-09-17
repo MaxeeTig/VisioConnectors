@@ -94,3 +94,26 @@ For i1 = 0 To (countShapes - 1)
    
 
 End Sub
+
+Function GetTemplateLength(inputString As String) As Integer
+    Dim template As String
+    template = "1."
+    
+    ' Check if the input string starts with the template "1."
+    If InStr(1, inputString, template) = 1 Then
+        ' Find the first space " " in the string
+        Dim firstSpacePos As Integer
+        firstSpacePos = InStr(inputString, " ")
+        
+        ' If a space is found, calculate the length of the substring
+        If firstSpacePos > 0 Then
+            GetTemplateLength = firstSpacePos - 1
+        Else
+            ' If no space is found, return the length of the entire string
+            GetTemplateLength = Len(inputString)
+        End If
+    Else
+        ' If the template "1." is not found at the beginning, return 0
+        GetTemplateLength = 0
+    End If
+End Function
